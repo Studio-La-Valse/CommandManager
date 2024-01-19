@@ -1,7 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using StudioLaValse.CommandManager.Private;
 
-namespace StudioLaValse.CommandManager.Private
+namespace StudioLaValse.CommandManager
 {
+    /// <summary>
+    /// The default implementation for the <see cref="ICommandManager"/> interface.
+    /// </summary>
     public class CommandManager : ICommandManager
     {
         private readonly Stack<ITransaction> finishedTransactions;
@@ -13,12 +17,17 @@ namespace StudioLaValse.CommandManager.Private
             finishedTransactions = new Stack<ITransaction>();
             undoneTransactions = new Stack<ITransaction>();
         }
-
+        /// <summary>
+        /// Create a default <see cref="ICommandManager"/>
+        /// </summary>
+        /// <returns></returns>
         public static ICommandManager Create() =>
             new CommandManager();
 
 
         private ITransaction? openTransaction;
+
+        /// <inheritdoc/>
         public ITransaction OpenTransaction(string name)
         {
             if (TryGetOpenTransaction(out _))
@@ -30,12 +39,14 @@ namespace StudioLaValse.CommandManager.Private
             return openTransaction;
         }
 
+        /// <inheritdoc/>
         public bool TryGetOpenTransaction([NotNullWhen(true)] out ITransaction? transaction)
         {
             transaction = openTransaction;
             return transaction is not null;
         }
 
+        /// <inheritdoc/>
         public void Commit()
         {
             if (!TryGetOpenTransaction(out var transaction))
@@ -60,6 +71,7 @@ namespace StudioLaValse.CommandManager.Private
             }
         }
 
+        /// <inheritdoc/>
         public void Undo()
         {
             if (TryGetOpenTransaction(out _))
@@ -91,6 +103,7 @@ namespace StudioLaValse.CommandManager.Private
             }
         }
 
+        /// <inheritdoc/>
         public void Redo()
         {
             if (TryGetOpenTransaction(out _))
