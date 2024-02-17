@@ -134,5 +134,31 @@ namespace StudioLaValse.CommandManager.Tests
 
             Assert.ThrowsException<InvalidOperationException>(commandManager.Undo);
         }
+
+        [TestMethod]
+        public void TestCallback()
+        {
+            var stringValue = "Nothing happened";
+
+            var circle = new TestCircle()
+            {
+                Radius = 50,
+                X = 50,
+                Y = 50
+            };
+
+            var commandManager = CommandManager.Create().OnCommitDo(() => stringValue = "Something happened!");
+
+            using (var transaction = commandManager.OpenTransaction("Test"))
+            {
+                var command = new SimpleCommand<TestCircle>(
+                    (c) => c.Radius = 100,
+                    (c) => c.Radius = 50,
+                    circle);
+                transaction.Enqueue(command);
+            }
+
+            Assert.AreEqual<string>(stringValue, "Something happened!");
+        }
     }
 }
