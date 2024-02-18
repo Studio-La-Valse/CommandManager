@@ -15,10 +15,6 @@
         /// <param name="command"></param>
         void Enqueue(BaseCommand command);
         /// <summary>
-        /// Commit the transaction.
-        /// </summary>
-        void Commit();
-        /// <summary>
         /// Roll back the transaction.
         /// </summary>
         void RollBack();

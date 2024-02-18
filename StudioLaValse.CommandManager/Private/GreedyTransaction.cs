@@ -1,43 +1,36 @@
 ﻿namespace StudioLaValse.CommandManager.Private
 {
-    internal class Transaction : ITransaction
+    internal class GreedyTransaction : BaseTransaction
     {
         private readonly List<BaseCommand> commandsToExecute;
         private readonly Stack<BaseCommand> finishedCommands;
-        private readonly ICommandManager commandManager;
 
-        public string Name { get; }
 
-        public Transaction(ICommandManager commandManager, string name)
+        public GreedyTransaction(BaseCommandManager commandManager, string name) : base(commandManager, name)
         {
             commandsToExecute = new List<BaseCommand>();
             finishedCommands = new Stack<BaseCommand>();
-
-            this.commandManager = commandManager;
-            
-            Name = name;
         }
 
-        public void Enqueue(BaseCommand command)
+        public override void Enqueue(BaseCommand command)
         {
-            commandsToExecute.Insert(0, command);
+            command.Do();
+            finishedCommands.Push(command);
         }
 
-        public void Commit()
+        public override void Commit()
         {
-            finishedCommands.Clear();
-
             while (commandsToExecute.Count != 0)
             {
                 var command = commandsToExecute[0];
                 command.Do();
-                commandsToExecute.RemoveAt(0);
 
+                commandsToExecute.RemoveAt(0);
                 finishedCommands.Push(command);
             }
         }
 
-        public void RollBack()
+        public override void RollBack()
         {
             while (finishedCommands.Count != 0)
             {
@@ -46,11 +39,6 @@
 
                 commandsToExecute.Add(undoCommand);
             }
-        }
-
-        public void Dispose()
-        {
-            commandManager.Commit();
         }
     }
 }
