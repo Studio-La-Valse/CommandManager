@@ -1,38 +1,10 @@
 namespace StudioLaValse.CommandManager.Tests
 {
-    internal class TestCircle
-    {
-        public int Radius { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-    }
-
     [TestClass]
-    public class TransactionTests
+    public class LazyTransactionTests
     {
         [TestMethod]
-        public void TestCommandManager()
-        {
-            var commandManager = CommandManager.Create();
-
-            Assert.ThrowsException<Exception>(() =>
-            {
-                commandManager.ThrowIfNoTransactionOpen();
-            });
-
-            using (var transaction = commandManager.OpenTransaction("Test"))
-            {
-                commandManager.ThrowIfNoTransactionOpen();
-
-                Assert.ThrowsException<InvalidOperationException>(() =>
-                {
-                    commandManager.OpenTransaction("Fail");
-                });
-            }
-        }
-
-        [TestMethod]
-        public void TestTransaction()
+        public void TestLazyTransaction()
         {
             var circle = new TestCircle()
             {
@@ -41,7 +13,7 @@ namespace StudioLaValse.CommandManager.Tests
                 Y = 50
             };
 
-            var commandManager = CommandManager.Create();
+            var commandManager = CommandManager.CreateLazy();
             using (var transaction = commandManager.OpenTransaction("Test"))
             {
                 var command = new SimpleCommand<TestCircle>(
@@ -50,6 +22,7 @@ namespace StudioLaValse.CommandManager.Tests
                     circle);
                 transaction.Enqueue(command);
 
+                //The transaction is lazy, so the radius must not have changed.
                 Assert.AreEqual(circle.Radius, 50);
             }
 
@@ -96,7 +69,7 @@ namespace StudioLaValse.CommandManager.Tests
         }
 
         [TestMethod]
-        public void TestTransaction2()
+        public void TestLazyTransaction2()
         {
             var circle = new TestCircle()
             {
@@ -105,7 +78,7 @@ namespace StudioLaValse.CommandManager.Tests
                 Y = 50
             };
 
-            var commandManager = CommandManager.Create();
+            var commandManager = CommandManager.CreateLazy();
             using (var transaction = commandManager.OpenTransaction("Test"))
             {
                 var command = new SimpleCommand<TestCircle>(
