@@ -17,8 +17,8 @@ namespace StudioLaValse.CommandManager.Tests
             using (var transaction = commandManager.OpenTransaction("Test"))
             {
                 var command = new SimpleCommand<TestCircle>(
-                    (c) => c.Radius = 100, 
-                    (c) => c.Radius = 50, 
+                    (c) => c.Radius = 100,
+                    (c) => c.Radius = 50,
                     circle);
                 transaction.Enqueue(command);
 
@@ -37,14 +37,14 @@ namespace StudioLaValse.CommandManager.Tests
             using (var transaction = commandManager.OpenTransaction("Test"))
             {
                 var command = new SimpleCommand<TestCircle>(
-                    (c) => c.X = 100, 
-                    (c) => c.X = 50, 
+                    (c) => c.X = 100,
+                    (c) => c.X = 50,
                     circle);
                 transaction.Enqueue(command);
 
                 command = new SimpleCommand<TestCircle>(
-                    (c) => c.Y = 100, 
-                    (c) => c.Y = 50, 
+                    (c) => c.Y = 100,
+                    (c) => c.Y = 50,
                     circle);
                 transaction.Enqueue(command);
             }
@@ -82,8 +82,8 @@ namespace StudioLaValse.CommandManager.Tests
             using (var transaction = commandManager.OpenTransaction("Test"))
             {
                 var command = new SimpleCommand<TestCircle>(
-                    (c) => c.Radius = 100, 
-                    (c) => c.Radius = 50, 
+                    (c) => c.Radius = 100,
+                    (c) => c.Radius = 50,
                     circle);
                 transaction.Enqueue(command);
             }
@@ -93,8 +93,8 @@ namespace StudioLaValse.CommandManager.Tests
             using (var transaction = commandManager.OpenTransaction("Test"))
             {
                 var command = new SimpleCommand<TestCircle>(
-                    (c) => c.X = 100, 
-                    (c) => c.X = 50, 
+                    (c) => c.X = 100,
+                    (c) => c.X = 50,
                     circle);
                 transaction.Enqueue(command);
             }
